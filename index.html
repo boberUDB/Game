@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estratos FPS</title>
+  <meta name="description" content="Demo de Estratos en primera persona: picá, vendé, colapsá la mina y encontrá tus fósiles.">
+  <meta name="theme-color" content="#080a1c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 fill=%27%23080a1c%27/%3E%3Cpath d=%27M2 13L8 3l6 10z%27 fill=%27%23f5b942%27/%3E%3C/svg%3E">
+  <script type="module" crossorigin src="./assets/index-CJxigr3A.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-4kmoqzKy.css">
+</head>
+<body>
+  <div id="app" data-orientacion="horizontal" data-pantalla="titulo" data-calidad="medio">
+    <canvas id="lienzo" aria-label="La mina de Estratos"></canvas>
+    <div id="vineta-calor" data-nivel="normal" aria-hidden="true"></div>
+
+    <!-- HUD -->
+    <div id="hud">
+      <div class="hud-bloque hud-izq-arriba">
+        <div id="hud-colones" aria-label="Colones">₡0</div>
+        <div class="hud-linea">
+          <span id="hud-prof">0 m</span>
+          <span id="hud-mult" hidden>x1</span>
+        </div>
+        <div id="hud-record">Récord: 0 m</div>
+      </div>
+
+      <div class="hud-bloque hud-der-arriba">
+        <div id="hud-calor" data-nivel="normal" role="progressbar" aria-label="Calor del minero" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="etiqueta">Calor</span>
+          <div class="barra"><div class="relleno"></div></div>
+        </div>
+      </div>
+
+      <div class="hud-bloque hud-izq-abajo">
+        <div class="hud-fila">
+          <div id="hud-mochila" aria-label="Mochila"></div>
+          <img id="hud-mascota" src="./mascotas/torogoz_0.png" alt="Torogoz" width="32" height="32" hidden>
+        </div>
+        <ul id="hud-fosiles" aria-label="Fósiles activos"></ul>
+        <p class="hud-teclas"><kbd>Tab</kbd> mochila <kbd>T</kbd> subir <kbd>E</kbd> usar</p>
+      </div>
+
+      <div id="mira" aria-hidden="true"></div>
+      <div id="bloque-info" hidden><span class="nombre"></span><span class="vida"></span></div>
+      <p id="interaccion" hidden></p>
+      <div id="silbido" hidden role="progressbar" aria-label="Silbido al ascensor" aria-valuemin="0" aria-valuemax="100">
+        <span>Silbando al ascensor…</span><div class="barra"><div class="relleno"></div></div>
+      </div>
+      <p id="pista" hidden></p>
+      <div id="avisos" aria-live="polite"></div>
+    </div>
+
+    <div id="pico" data-cuadro="0" aria-hidden="true">
+      <img src="./pico/pico_0_reposo.png" alt="" width="96" height="96">
+      <img src="./pico/pico_1_preparar.png" alt="" width="96" height="96">
+      <img src="./pico/pico_2_golpe.png" alt="" width="96" height="96">
+      <img src="./pico/pico_3_impacto.png" alt="" width="96" height="96">
+      <img src="./pico/pico_4_regreso.png" alt="" width="96" height="96">
+    </div>
+
+    <!-- Título -->
+    <section id="pantalla-titulo" class="pantalla" data-state="abierta" role="dialog" aria-modal="true" aria-labelledby="titulo-nombre">
+      <div class="panel panel--titulo">
+        <h1 id="titulo-nombre">ESTRATOS</h1>
+        <p class="titulo-frase">Picá, vendé y derrumbá la mina. Lo que perdás te espera enterrado.</p>
+        <p id="titulo-mensaje" class="mensaje" role="status" hidden></p>
+        <div class="acciones">
+          <button id="btn-continuar" class="btn btn--primario btn--grande" type="button" hidden>Continuar</button>
+          <button id="btn-empezar" class="btn btn--primario btn--grande" type="button">Hacé clic para empezar</button>
+          <button id="btn-nueva" class="btn" type="button" hidden>Nueva partida</button>
+        </div>
+        <div id="confirmar-nueva" class="confirmar" hidden>
+          <p>Si empezás de nuevo, perdés la partida guardada. ¿Seguro?</p>
+          <button id="btn-nueva-si" class="btn btn--peligro" type="button">Sí, borrar y empezar</button>
+          <button id="btn-nueva-no" class="btn" type="button">Mejor no</button>
+        </div>
+        <ul class="controles" aria-label="Controles">
+          <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> moverte</li>
+          <li><kbd>Mouse</kbd> mirar</li>
+          <li><kbd>Clic</kbd> mantené para picar</li>
+          <li><kbd>Shift</kbd> correr</li>
+          <li><kbd>Espacio</kbd> saltar</li>
+          <li><kbd>E</kbd> usar tienda o ascensor</li>
+          <li><kbd>Tab</kbd> mochila</li>
+          <li><kbd>T</kbd> subir silbando</li>
+          <li><kbd>Esc</kbd> pausa</li>
+          <li><kbd>M</kbd> silencio</li>
+          <li><kbd>F3</kbd> diagnóstico</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Pausa -->
+    <section id="pantalla-pausa" class="pantalla" data-state="cerrada" role="dialog" aria-modal="true" aria-labelledby="pausa-titulo">
+      <div class="panel panel--angosto">
+        <h2 id="pausa-titulo">Pausa</h2>
+        <div class="ajustes">
+          <label class="campo" for="ajuste-sensibilidad"><span>Sensibilidad del mouse</span>
+            <input id="ajuste-sensibilidad" type="range" min="0.3" max="2.5" step="0.05"><output id="salida-sensibilidad"></output></label>
+          <label class="campo campo--check" for="ajuste-invertir"><input id="ajuste-invertir" type="checkbox"><span>Invertir eje Y</span></label>
+          <label class="campo" for="ajuste-fov"><span>Campo de visión</span>
+            <input id="ajuste-fov" type="range" min="60" max="90" step="1"><output id="salida-fov"></output></label>
+          <fieldset id="ajuste-calidad" class="segmentos">
+            <legend>Calidad gráfica</legend>
+            <label><input type="radio" name="calidad" value="bajo"><span>Baja</span></label>
+            <label><input type="radio" name="calidad" value="medio"><span>Media</span></label>
+            <label><input type="radio" name="calidad" value="alto"><span>Alta</span></label>
+          </fieldset>
+          <label class="campo" for="ajuste-volumen"><span>Volumen</span>
+            <input id="ajuste-volumen" type="range" min="0" max="1" step="0.05"><output id="salida-volumen"></output></label>
+        </div>
+        <dl id="pausa-records"></dl>
+        <div class="acciones">
+          <button id="btn-continuar-pausa" class="btn btn--primario" type="button">Seguir picando</button>
+          <button id="btn-borrar" class="btn btn--peligro" type="button">Borrar partida</button>
+          <button id="btn-salir" class="btn" type="button">Salir al título</button>
+        </div>
+        <div id="confirmar-borrar" class="confirmar" hidden>
+          <p>Se borra todo: colones, mejoras, estratos y récords. ¿Seguro?</p>
+          <button id="btn-borrar-si" class="btn btn--peligro" type="button">Sí, borrar todo</button>
+          <button id="btn-borrar-no" class="btn" type="button">Mejor no</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mochila -->
+    <section id="pantalla-mochila" class="pantalla" data-state="cerrada" role="dialog" aria-modal="true" aria-labelledby="mochila-titulo">
+      <div class="panel">
+        <header class="cabecera">
+          <h2 id="mochila-titulo">Mochila</h2>
+          <button id="btn-cerrar-mochila" class="btn btn--icono" type="button" aria-label="Cerrar mochila">✕</button>
+        </header>
+        <div class="mochila-cuerpo">
+          <div id="rejilla-mochila" aria-label="Cuadrícula de la mochila, 4 por 4"></div>
+          <div class="mochila-lado">
+            <p id="mochila-resumen"></p>
+            <p id="mochila-vacia" hidden>Todavía no llevás nada. Picá algo que brille.</p>
+            <button id="btn-acomodar" class="btn btn--primario" type="button">Acomodar solo <kbd>Q</kbd></button>
+            <ul class="ayuda">
+              <li>Arrastrá una pieza para moverla.</li>
+              <li><kbd>R</kbd> la rota, <kbd>Supr</kbd> la tira.</li>
+              <li>Con teclado: elegí una pieza y usá las flechas.</li>
+              <li>Sin huecos, la tienda paga 50 % más.</li>
+              <li><kbd>Tab</kbd> o <kbd>Esc</kbd> cierran la mochila.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tienda -->
+    <section id="pantalla-tienda" class="pantalla" data-state="cerrada" role="dialog" aria-modal="true" aria-labelledby="tienda-titulo">
+      <div class="panel panel--ancho">
+        <header class="cabecera">
+          <h2 id="tienda-titulo">Tienda de la Niña Tere</h2>
+          <span id="tienda-colones" class="tienda-colones"></span>
+          <button id="btn-cerrar-tienda" class="btn btn--icono" type="button" aria-label="Cerrar tienda">✕</button>
+        </header>
+        <p id="tienda-frase" class="frase" hidden></p>
+        <div class="tienda-cuerpo">
+          <div class="tienda-col">
+            <h3>Vender</h3>
+            <ul id="lista-venta"></ul>
+            <p id="venta-vacia" hidden>Traé minerales y te los compro.</p>
+            <dl id="venta-desglose"></dl>
+            <button id="btn-vender" class="btn btn--primario btn--vender" type="button">Vender todo</button>
+            <div id="bloque-mascota">
+              <h3 class="sub">Mascota</h3>
+              <button id="btn-mascota" class="mejora" type="button"></button>
+            </div>
+          </div>
+          <div class="tienda-col" id="col-mejoras">
+            <h3>Mejoras del pico</h3>
+            <div id="lista-mejoras"></div>
+            <div class="colapso-caja">
+              <p id="colapso-texto"></p>
+              <button id="btn-colapsar" class="btn btn--peligro" type="button">Colapsar la mina</button>
+            </div>
+          </div>
+        </div>
+        <div id="confirmar-colapso" class="confirmar-colapso" hidden role="alertdialog" aria-labelledby="colapso-conf-titulo">
+          <h3 id="colapso-conf-titulo">¿Colapsar la mina?</h3>
+          <div class="tres-columnas">
+            <div class="col col--conserva"><h4>Conservás</h4><ul id="col-conserva"></ul></div>
+            <div class="col col--pierde"><h4>Perdés</h4><ul id="col-pierde"></ul></div>
+            <div class="col col--nuevo"><h4>Tu multiplicador nuevo</h4><p id="col-nuevo" class="gigante"></p><p id="col-estrato"></p></div>
+          </div>
+          <div class="acciones">
+            <button id="btn-colapso-si" class="btn btn--peligro btn--grande" type="button">Colapsar</button>
+            <button id="btn-colapso-no" class="btn btn--grande" type="button">Mejor no</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Colapso -->
+    <section id="pantalla-colapso" class="pantalla" data-state="cerrada" aria-live="assertive">
+      <div class="colapso-fundido"></div>
+      <div class="colapso-tarjeta">
+        <p id="colapso-etiqueta"></p>
+        <p id="colapso-mult"></p>
+      </div>
+    </section>
+
+    <!-- Desmayo -->
+    <section id="pantalla-desmayo" class="pantalla" data-state="cerrada" aria-live="assertive">
+      <div class="desmayo-tarjeta">
+        <h2>Te desmayaste</h2>
+        <p id="desmayo-texto">El calor te ganó. Perdiste la mitad de lo que llevabas.</p>
+      </div>
+    </section>
+
+    <button id="clic-seguir" class="btn btn--primario btn--grande" type="button" hidden>Hacé clic para seguir</button>
+    <pre id="diagnostico" hidden aria-live="off"></pre>
+  </div>
+</body>
+</html>
