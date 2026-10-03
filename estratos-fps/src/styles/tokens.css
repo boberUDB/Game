@@ -1,0 +1,59 @@
+/* Tokens de diseño. Ningún color, espacio o tiempo de la interfaz se escribe fuera de este archivo. */
+:root {
+  --bg: #080a1c;
+  --surface: #10153a;
+  --surface-2: #1a2352;
+  --border: #27366e;
+  --text: #e8d3a0;
+  --text-muted: #8aa0cf;
+
+  --ambar: #f5b942;
+  --ambar-fuerte: #d9732a;
+  --luz: #fff0b3;
+  --teal: #62b5a5;
+  --violeta: #9d6bbd;
+  --peligro: #d6384f;
+
+  --azufre: #f5b942;
+  --oro: #e3bb55;
+  --esmeralda: #2fbf71;
+  --rubi: #d6384f;
+  --zafiro: #3d8bff;
+
+  --velo: rgb(8 10 28 / 0.78);
+  --velo-suave: rgb(8 10 28 / 0.55);
+  --sombra-texto: 0 2px 0 rgb(8 10 28 / 0.9);
+  --glow-ambar: 0 0 24px rgb(245 185 66 / 0.35);
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+
+  --r-sm: 2px;
+  --r-md: 4px;
+
+  --font-display: 'Pixelify Sans', system-ui, sans-serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --fs-xs: 13px;
+  --fs-sm: 15px;
+  --fs-md: 18px;
+  --fs-lg: 24px;
+  --fs-xl: clamp(32px, 3.2vw, 48px);
+  --fs-titulo: clamp(64px, 9vw, 128px);
+
+  --celda: 64px;
+  --celda-mini: 20px;
+  --alto-btn: 44px;
+  --alto-btn-grande: 56px;
+
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+  --dur-numero: 600ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}

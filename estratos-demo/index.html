@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estratos</title>
+  <meta name="description" content="Demo de Estratos: picá, vendé y derrumbá la mina de un volcán salvadoreño.">
+  <meta name="theme-color" content="#120C0A">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 fill=%27%23120C0A%27/%3E%3Cpath d=%27M2 13L8 3l6 10z%27 fill=%27%23FF6A2B%27/%3E%3C/svg%3E">
+</head>
+<body>
+  <canvas id="juego" aria-label="La mina de Estratos"></canvas>
+
+  <div id="ui" data-pantalla="titulo">
+    <div id="vineta-calor" aria-hidden="true"></div>
+    <div id="numeros" aria-hidden="true"></div>
+
+    <!-- HUD -->
+    <div id="hud">
+      <div class="hud-izq">
+        <div id="hud-colones" aria-label="Colones">₡0</div>
+        <div class="hud-linea">
+          <span id="hud-profundidad">0 m</span>
+          <span id="hud-estrato" hidden></span>
+          <span id="hud-multiplicador" hidden></span>
+        </div>
+        <div id="hud-bloques">0 bloques picados</div>
+        <ul id="hud-fosiles" aria-label="Fósiles activos"></ul>
+      </div>
+
+      <div class="hud-centro">
+        <div class="calor">
+          <span class="calor-nombre">Calor</span>
+          <div id="barra-calor" role="progressbar" aria-label="Calor del minero" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="calor-relleno"></div>
+          </div>
+        </div>
+        <p id="pista" hidden></p>
+      </div>
+
+      <div class="hud-der">
+        <div id="mini-mochila" aria-hidden="true"></div>
+        <div class="hud-tecla"><kbd>Tab</kbd> Mochila</div>
+      </div>
+
+      <div id="aviso-tienda" hidden><kbd>E</kbd> Tienda de la Niña Tere</div>
+    </div>
+
+    <!-- Título -->
+    <section id="pantalla-titulo" class="pantalla" aria-labelledby="titulo-nombre">
+      <div class="titulo-caja">
+        <h1 id="titulo-nombre">ESTRATOS</h1>
+        <p class="titulo-frase">Picá, vendé y derrumbá la mina. Lo que perdás te espera enterrado.</p>
+        <div class="titulo-acciones">
+          <button id="btn-jugar" class="btn btn--primario btn--grande" type="button">Bajar a la mina</button>
+          <button id="btn-borrar-partida" class="btn" type="button" hidden>Borrar partida</button>
+        </div>
+        <ul class="titulo-controles">
+          <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> moverte</li>
+          <li><kbd>Clic</kbd> picar</li>
+          <li><kbd>Tab</kbd> mochila</li>
+          <li><kbd>E</kbd> tienda</li>
+          <li><kbd>Esc</kbd> pausa</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Mochila -->
+    <section id="panel-mochila" class="panel" role="dialog" aria-modal="true" aria-labelledby="mochila-titulo">
+      <header class="panel-cabecera">
+        <h2 id="mochila-titulo">Mochila</h2>
+        <button id="btn-cerrar-mochila" class="btn btn--icono" type="button" aria-label="Cerrar mochila">✕</button>
+      </header>
+      <div class="mochila-cuerpo">
+        <div id="rejilla-mochila" aria-label="Cuadrícula de la mochila, 4 por 4"></div>
+        <div class="mochila-lado">
+          <p id="mochila-resumen"></p>
+          <p id="mochila-vacia" hidden>Todavía no llevás nada. Picá algo que brille.</p>
+          <button id="btn-acomodar" class="btn btn--primario" type="button">Acomodar solo <kbd>Q</kbd></button>
+          <ul class="ayuda">
+            <li>Arrastrá una pieza para moverla.</li>
+            <li><kbd>R</kbd> la rota, <kbd>Supr</kbd> la tira.</li>
+            <li>Con teclado: elegí una pieza y usá las flechas.</li>
+            <li>Sin huecos, la tienda paga 50 % más.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tienda -->
+    <section id="panel-tienda" class="panel" role="dialog" aria-modal="true" aria-labelledby="tienda-titulo">
+      <header class="panel-cabecera">
+        <h2 id="tienda-titulo">Tienda de la Niña Tere</h2>
+        <span id="tienda-colones" class="tienda-colones"></span>
+        <button id="btn-cerrar-tienda" class="btn btn--icono" type="button" aria-label="Cerrar tienda">✕</button>
+      </header>
+      <div class="tienda-cuerpo">
+        <div class="tienda-col">
+          <h3>Vender</h3>
+          <ul id="lista-venta"></ul>
+          <p id="venta-vacia" hidden>Traé minerales y te los compro.</p>
+          <dl id="venta-desglose"></dl>
+          <button id="btn-vender" class="btn btn--primario btn--vender" type="button">Vender todo</button>
+
+          <h3 class="tienda-sub">Mascota</h3>
+          <button id="btn-mascota" class="mejora" type="button"></button>
+        </div>
+        <div class="tienda-col">
+          <h3>Mejoras del pico</h3>
+          <div id="lista-mejoras"></div>
+          <div class="colapso-caja">
+            <p id="colapso-texto"></p>
+            <button id="btn-colapsar" class="btn btn--peligro" type="button">Colapsar la mina</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pausa -->
+    <section id="pantalla-pausa" class="panel panel--angosto" role="dialog" aria-modal="true" aria-labelledby="pausa-titulo">
+      <header class="panel-cabecera"><h2 id="pausa-titulo">Pausa</h2></header>
+      <div class="pausa-cuerpo">
+        <fieldset id="ajuste-calidad" class="segmentos">
+          <legend>Calidad gráfica</legend>
+          <label><input type="radio" name="calidad" value="bajo"><span>Baja</span></label>
+          <label><input type="radio" name="calidad" value="medio"><span>Media</span></label>
+          <label><input type="radio" name="calidad" value="alto"><span>Alta</span></label>
+        </fieldset>
+        <label class="campo" for="ajuste-volumen">Volumen
+          <input id="ajuste-volumen" type="range" min="0" max="1" step="0.05">
+        </label>
+        <button id="btn-silencio" class="btn" type="button" aria-pressed="false">Silenciar <kbd>M</kbd></button>
+        <dl id="pausa-records"></dl>
+        <div class="pausa-acciones">
+          <button id="btn-continuar" class="btn btn--primario" type="button">Seguir picando</button>
+          <button id="btn-salir" class="btn" type="button">Salir al título</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Colapso -->
+    <section id="pantalla-colapso" aria-live="assertive">
+      <div class="colapso-banda"></div>
+      <p id="colapso-etiqueta"></p>
+      <p id="colapso-mult"></p>
+    </section>
+
+    <!-- Confirmación -->
+    <div id="dialogo-confirmar" class="velo" hidden>
+      <div class="panel panel--angosto panel--visible" role="alertdialog" aria-modal="true" aria-labelledby="confirmar-titulo" aria-describedby="confirmar-texto">
+        <h2 id="confirmar-titulo"></h2>
+        <div id="confirmar-texto"></div>
+        <div class="pausa-acciones">
+          <button id="confirmar-si" class="btn btn--peligro" type="button"></button>
+          <button id="confirmar-no" class="btn" type="button">Mejor no</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cartel" hidden></div>
+    <div id="toasts" aria-live="polite"></div>
+  </div>
+
+  <div id="aviso-pantalla-chica">
+    <p><strong>Estratos</strong> es una demo para computadora.</p>
+    <p>Abrila en una ventana de al menos 1024 px de ancho, con ratón y teclado.</p>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

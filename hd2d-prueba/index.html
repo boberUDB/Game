@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estratos, prueba HD-2D</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --bg: #0a0f24; --panel: rgb(10 15 36 / 0.82); --borde: #2a3560; --texto: #f2ead8; --tenue: #a9b2d0; --farol: #ffb347;
+      --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-6: 24px; --r: 8px;
+      --fuente: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--texto); font: 14px/1.45 var(--fuente); }
+    #lienzo { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+    kbd { display: inline-block; min-width: 22px; padding: 0 var(--sp-1); border: 1px solid var(--borde); border-bottom-width: 3px; border-radius: 4px; background: var(--bg); text-align: center; font: inherit; }
+    #ayuda { position: fixed; top: var(--sp-4); left: var(--sp-4); padding: var(--sp-3) var(--sp-4); border: 1px solid var(--borde); border-radius: var(--r); background: var(--panel); max-width: 340px; }
+    #ayuda h1 { margin: 0 0 var(--sp-2); font-size: 16px; color: var(--farol); }
+    #ayuda ul { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--sp-1); color: var(--tenue); }
+    #ayuda b { color: var(--texto); font-weight: 400; }
+    #assets { position: fixed; inset: 0; padding: var(--sp-6); overflow: auto; background: #1a2040; display: none; }
+    #assets[data-abierto] { display: block; }
+    #assets h2 { margin: 0 0 var(--sp-1); font-size: 18px; color: var(--farol); }
+    #assets p { margin: 0 0 var(--sp-4); color: var(--tenue); }
+    #assets h3 { margin: var(--sp-6) 0 var(--sp-3); font-size: 14px; font-weight: 400; color: var(--tenue); border-bottom: 1px solid var(--borde); padding-bottom: var(--sp-1); }
+    .rejilla { display: flex; flex-wrap: wrap; gap: var(--sp-4); align-items: flex-end; }
+    figure { margin: 0; display: grid; gap: var(--sp-1); justify-items: start; }
+    figure canvas { image-rendering: pixelated; background: repeating-conic-gradient(#232a52 0% 25%, #1e2548 0% 50%) 0 0 / 16px 16px; border: 1px solid var(--borde); }
+    figcaption { color: var(--tenue); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <canvas id="lienzo" aria-label="Escena de prueba HD-2D"></canvas>
+  <aside id="ayuda">
+    <h1>Prueba HD-2D</h1>
+    <ul>
+      <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> caminar en cualquier dirección</li>
+      <li><kbd>Espacio</kbd> picar</li>
+      <li><kbd>Tab</kbd> ver los assets</li>
+      <li><kbd>N</kbd> noche o atardecer: <b id="e-luz">noche</b></li>
+      <li><kbd>F</kbd> desenfoque: <b id="e-foco">sí</b></li>
+      <li><kbd>B</kbd> brillo: <b id="e-brillo">sí</b></li>
+      <li><kbd>H</kbd> ocultar esta ayuda</li>
+    </ul>
+  </aside>
+  <section id="assets" aria-label="Assets">
+    <h2>Assets a 16 píxeles por metro</h2>
+    <p>Ampliados para verlos. Tab para volver a la escena.</p>
+    <div id="assets-cuerpo"></div>
+  </section>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+**/node_modules/
+
+# Salidas de compilación (se publican en la rama gh-pages)
+dist/
+**/dist/
+
+# Archivos temporales y registros
+*.log
+**/*.log
+.tmp/
+**/.tmp/
+.tmp_git_backup/
+
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini

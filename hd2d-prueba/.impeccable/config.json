@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-03T04:39:12.398Z",
+        "reason": "Claude decided: the only thick border is the 3px bottom edge of the kbd keycap, a standard keyboard-key look, not a card accent"
+      }
+    ]
+  }
+}

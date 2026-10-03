@@ -1,0 +1,65 @@
+/* Tokens de diseño. Ningún color, espacio o tiempo de la interfaz se escribe fuera de aquí. */
+:root {
+  --bg: #120C0A;
+  --surface: #1E1512;
+  --surface-2: #2A1E19;
+  --border: #3D2B23;
+  --text: #F6EBDD;
+  --text-muted: #B8A392;
+
+  --lava: #FF6A2B;
+  --lava-fuerte: #FF8A4C;
+  --jade: #3FD9B4;
+  --oro: #F2C14E;
+  --peligro: #FF5A5F;
+  --azufre: #E8D44D;
+  --hierro: #E07A3A;
+  --obsidiana: #9B6BE8;
+
+  --velo: rgb(18 12 10 / 0.72);
+  --velo-suave: rgb(18 12 10 / 0.55);
+  --sombra-texto: 0 2px 0 rgb(18 12 10 / 0.9);
+  --sombra-panel: 0 24px 64px rgb(0 0 0 / 0.55);
+  --glow-lava: 0 0 24px rgb(255 106 43 / 0.35);
+  --vineta-calor: rgb(255 60 30 / 0.5);
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+
+  --font-display: 'Pixelify Sans', system-ui, sans-serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-num: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --fs-xs: 13px;
+  --fs-sm: 15px;
+  --fs-md: 18px;
+  --fs-lg: 24px;
+  --fs-xl: clamp(32px, 3.2vw, 48px);
+  --fs-titulo: clamp(64px, 9vw, 128px);
+
+  --celda: 64px;
+  --celda-mini: 20px;
+  --alto-btn: 44px;
+  --alto-btn-grande: 56px;
+  --alto-mejora: 64px;
+  --ancho-calor: 240px;
+  --alto-calor: 12px;
+  --ancho-tienda: 880px;
+  --ancho-angosto: 440px;
+
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+  --dur-numero: 600ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
